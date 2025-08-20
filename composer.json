@@ -1,0 +1,21 @@
+{
+    "name": "hexlet/code",
+    "type": "library",
+    "autoload": {
+      "psr-4": {
+        "Php\\Package\\": "src"
+      }
+    },
+    "authors": [
+        {
+            "name": "Екатерина Чмиль",
+            "email": "chmil.ekat@yandex.ru"
+        }
+    ],
+    "require": {
+        "docopt/docopt": "^1.0"
+    },
+    "bin": [
+        "bin/gendiff"
+    ]
+}
