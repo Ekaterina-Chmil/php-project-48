@@ -10,6 +10,8 @@ if (file_exists($autoloadPath1)) {
     require_once $autoloadPath2;
 }
 
+use function Differ\genDiff;
+
 $doc = <<<DOC
 Generate diff
 
@@ -26,24 +28,10 @@ DOC;
 
 $args = Docopt::handle($doc, ['version' => '1.0.0']);
 
-if ($args['--help']) {
-    echo $doc . "\n";
-    exit;
-}
-
-if ($args['--version']) {
-    echo "gendiff 1.0.0\n";
-    exit;
-}
-
 $firstFile = $args['<firstFile>'];
 $secondFile = $args['<secondFile>'];
+$format = $args['--format'] ?? 'stylish';
 
-$content1 = file_get_contents($firstFile);
-$content2 = file_get_contents($secondFile);
+$diff = genDiff($firstFile, $secondFile, $format);
 
-$data1 = json_decode($content1, true);
-$data2 = json_decode($content2, true);
-
-print_r($data1);
-print_r($data2);
+print_r($diff);
