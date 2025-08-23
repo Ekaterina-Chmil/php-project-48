@@ -24,7 +24,7 @@ Options:
   --format <fmt>                Report format [default: stylish]
 DOC;
 
-$args = Docopt::handle($doc);
+$args = Docopt::handle($doc, ['version' => '1.0.0']);
 
 if ($args['--help']) {
     echo $doc . "\n";
@@ -35,3 +35,15 @@ if ($args['--version']) {
     echo "gendiff 1.0.0\n";
     exit;
 }
+
+$firstFile = $args['<firstFile>'];
+$secondFile = $args['<secondFile>'];
+
+$content1 = file_get_contents($firstFile);
+$content2 = file_get_contents($secondFile);
+
+$data1 = json_decode($content1, true);
+$data2 = json_decode($content2, true);
+
+print_r($data1);
+print_r($data2);
