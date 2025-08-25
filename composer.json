@@ -6,6 +6,11 @@
         "src/Differ.php"
       ]
     },
+    "autoload-dev": {
+    "psr-4": {
+        "Tests\\": "tests/"
+    }
+    },
     "authors": [
         {
             "name": "Екатерина Чмиль",
@@ -18,5 +23,10 @@
     },
     "bin": [
         "bin/gendiff"
-    ]
+    ],
+    "scripts": {
+    "lint": "phpcs --standard=PSR12 src",
+    "test": "phpunit --colors=always",
+    "test-coverage": "phpunit --coverage-clover=coverage.xml"
+  }
 }

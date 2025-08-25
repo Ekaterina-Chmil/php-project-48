@@ -1,0 +1,42 @@
+name: PHP CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          coverage: xdebug
+
+      - name: Install dependencies
+        run: composer install
+
+      - name: Run Linter
+        run: php -d error_reporting="E_ALL & ~E_DEPRECATED" vendor/bin/phpcs --standard=PSR12 src
+
+      - name: Run Tests
+        run: make test
+
+      - name: Run Tests with Coverage
+        run: make test-coverage
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=ekaterinachmil_php-project-48
+            -Dsonar.organization=ekaterinachmil
+            -Dsonar.php.coverage.reportPaths=coverage.xml
