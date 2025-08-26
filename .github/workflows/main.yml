@@ -22,6 +22,9 @@ jobs:
       - name: Install dependencies
         run: composer install
 
+      - name: Dump autoload
+        run: composer dump-autoload  
+
       - name: Run Linter
         run: php -d error_reporting="E_ALL & ~E_DEPRECATED" vendor/bin/phpcs --standard=PSR12 src
 
