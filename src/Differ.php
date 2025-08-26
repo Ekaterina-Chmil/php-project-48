@@ -41,8 +41,17 @@ function genDiff(string $filepath1, string $filepath2, string $format = 'stylish
 
 function formatValue($value): string
 {
+    if (is_array($value)) {
+        return 'Array';
+    }
+
     if (is_bool($value)) {
         return $value ? 'true' : 'false';
     }
+
+    if ($value === null) {
+        return 'null';
+    }
+
     return (string) $value;
 }
