@@ -19,10 +19,13 @@ jobs:
           php-version: '8.2'
           coverage: xdebug
 
-      - name: Install dependencies
-        run: composer install --dev
+      - name: Clean vendor
+        run: rm -rf vendor
 
-      - name: Dump autoload (optimized)
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist --dev
+
+      - name: Dump optimized autoload
         run: composer dump-autoload -o 
 
       - name: Run Linter
