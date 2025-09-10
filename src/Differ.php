@@ -4,6 +4,8 @@ namespace Differ;
 
 use Funct\Collection;
 
+use function Differ\Parsers\parseFile;
+
 function genDiff(string $filepath1, string $filepath2, string $format = 'stylish'): string
 {
     $fullPath1 = realpath($filepath1);
@@ -13,8 +15,8 @@ function genDiff(string $filepath1, string $filepath2, string $format = 'stylish
         throw new \Exception("Файл не найден!");
     }
 
-    $data1 = json_decode(file_get_contents($fullPath1), true);
-    $data2 = json_decode(file_get_contents($fullPath2), true);
+    $data1 = parseFile($fullPath1);
+    $data2 = parseFile($fullPath2);
 
     $allKeys = array_unique(array_merge(array_keys($data1), array_keys($data2)));
 
