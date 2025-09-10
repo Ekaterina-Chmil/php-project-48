@@ -3,8 +3,9 @@
 namespace Differ;
 
 use Funct\Collection;
+use Symfony\Component\Yaml\Yaml;
 
-use function Differ\Parsers\parseFile;
+use function Differ\Parsers\parse;
 
 function genDiff(string $filepath1, string $filepath2, string $format = 'stylish'): string
 {
@@ -15,11 +16,16 @@ function genDiff(string $filepath1, string $filepath2, string $format = 'stylish
         throw new \Exception("Файл не найден!");
     }
 
-    $data1 = parseFile($fullPath1);
-    $data2 = parseFile($fullPath2);
+    $fileContent1 = file_get_contents($filepath1);
+    $fileContent2 = file_get_contents($filepath2);
+
+    $format1 = getFormat($fullPath1);
+    $format2 = getFormat($fullPath2);
+
+    $data1 = parse($format1, $fileContent1);
+    $data2 = parse($format2, $fileContent2);
 
     $allKeys = array_unique(array_merge(array_keys($data1), array_keys($data2)));
-
     $sortedKeys = Collection\sortBy($allKeys, fn($key) => $key);
 
     $lines = array_map(function ($key) use ($data1, $data2) {
@@ -56,4 +62,16 @@ function formatValue($value): string
     }
 
     return (string) $value;
+}
+
+function getFormat(string $filepath): string
+{
+    $ext = pathinfo($filepath, PATHINFO_EXTENSION);
+
+    return match (strtolower($ext)) {
+        'json' => 'json',
+        'yml' => 'yml',
+        'yaml' => 'yaml',
+        default => throw new \RuntimeException("Unknown file format: $ext"),
+    };
 }

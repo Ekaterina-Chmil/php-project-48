@@ -28,7 +28,7 @@
     ],
     "scripts": {
     "lint": "phpcs --standard=PSR12 src",
-    "test": "phpunit --colors=always",
+    "test": "composer exec --verbose phpunit tests",
     "test-coverage": "phpunit --coverage-clover=coverage.xml"
   },
     "require-dev": {
