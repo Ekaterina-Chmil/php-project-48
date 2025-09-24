@@ -6,6 +6,8 @@ use Funct\Collection;
 use Symfony\Component\Yaml\Yaml;
 
 use function Differ\Parsers\parse;
+use function Differ\buildDiff;
+use function Differ\Formatters\stylish;
 
 function genDiff(string $filepath1, string $filepath2, string $format = 'stylish'): string
 {
@@ -25,43 +27,13 @@ function genDiff(string $filepath1, string $filepath2, string $format = 'stylish
     $data1 = parse($format1, $fileContent1);
     $data2 = parse($format2, $fileContent2);
 
-    $allKeys = array_unique(array_merge(array_keys($data1), array_keys($data2)));
-    $sortedKeys = Collection\sortBy($allKeys, fn($key) => $key);
+    $diff = buildDiff($data1, $data2);
 
-    $lines = array_map(function ($key) use ($data1, $data2) {
-        $has1 = array_key_exists($key, $data1);
-        $has2 = array_key_exists($key, $data2);
-
-        if ($has1 && $has2) {
-            if ($data1[$key] === $data2[$key]) {
-                return "    {$key}: " . formatValue($data1[$key]);
-            }
-            return "  - {$key}: " . formatValue($data1[$key]) . "\n  + {$key}: " . formatValue($data2[$key]);
-        }
-        if ($has1) {
-            return "  - {$key}: " . formatValue($data1[$key]);
-        }
-        return "  + {$key}: " . formatValue($data2[$key]);
-    }, $sortedKeys);
-
-    return "{\n" . implode("\n", $lines) . "\n}";
-}
-
-function formatValue($value): string
-{
-    if (is_array($value)) {
-        return 'Array';
+    if ($format === 'stylish') {
+        return stylish($diff);
     }
 
-    if (is_bool($value)) {
-        return $value ? 'true' : 'false';
-    }
-
-    if ($value === null) {
-        return 'null';
-    }
-
-    return (string) $value;
+    throw new \RuntimeException("Неизвестный формат вывода: $format");
 }
 
 function getFormat(string $filepath): string

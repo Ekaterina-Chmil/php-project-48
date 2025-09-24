@@ -8,7 +8,7 @@
 
 ```bash
 php bin/gendiff tests/fixtures/file1.json tests/fixtures/file2.json
-
+```
 Вывод:
 
 ```text
@@ -18,7 +18,7 @@ php bin/gendiff tests/fixtures/file1.json tests/fixtures/file2.json
   - timeout: 50
   + timeout: 20
   + verbose: true
-
+```
 ### Пример работы пакета с YAML
 [![asciicast](https://asciinema.org/a/OU2ASVN2hxvhfWI0QP5i10x4O.svg)](https://asciinema.org/a/OU2ASVN2hxvhfWI0QP5i10x4O)
 
@@ -26,7 +26,7 @@ php bin/gendiff tests/fixtures/file1.json tests/fixtures/file2.json
 
 ```bash
 php bin/gendiff tests/fixtures/file1.yml tests/fixtures/file2.yml
-
+```
 Вывод:
 
 ```text
@@ -36,6 +36,36 @@ php bin/gendiff tests/fixtures/file1.yml tests/fixtures/file2.yml
   - timeout: 50
   + timeout: 20
   + verbose: true
+```
+### Пример рекурсивного сравнения
+[![asciicast](https://asciinema.org/a/XGTOerq0yqmzHYzI5698WrtnH.svg)](https://asciinema.org/a/XGTOerq0yqmzHYzI5698WrtnH)
+
+Команда:
+
+```bash
+php bin/gendiff tests/fixtures/file1.json tests/fixtures/file2.json
+```
+
+Сокращённый вывод:
+
+```text
+{
+  common: {
+    + follow: false
+      setting1: Value 1
+    - setting2: 200
+    - setting3: true
+    + setting3: null
+  }
+  group1: {
+    - baz: bas
+    + baz: bars
+      foo: bar
+  }
+  - group2: {...}
+  + group3: {...}
+}
+```
 
 ### CI / Coverage
 [![PHP CI](https://github.com/Ekaterina-Chmil/php-project-48/actions/workflows/main.yml/badge.svg)](https://github.com/Ekaterina-Chmil/php-project-48/actions/workflows/main.yml)
