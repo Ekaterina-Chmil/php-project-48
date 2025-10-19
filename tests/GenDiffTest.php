@@ -27,4 +27,3 @@ EOT;
         $this->assertEquals($expected, genDiff($file1, $file2));
     }
 }
-

@@ -3,6 +3,7 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
+
 use function Differ\genDiff;
 
 class GenDiffYamlTest extends TestCase
@@ -26,4 +27,3 @@ EOT;
         $this->assertEquals($expected, genDiff($file1, $file2));
     }
 }
-

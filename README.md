@@ -1,6 +1,20 @@
 ### Hexlet tests and linter status:
 [![Actions Status](https://github.com/Ekaterina-Chmil/php-project-48/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Ekaterina-Chmil/php-project-48/actions)
 
+## Описание проекта
+
+**Gendiff** — это консольная PHP-утилита для сравнения двух конфигурационных файлов.  
+Поддерживает форматы **JSON** и **YAML**, а также несколько видов вывода:  
+`stylish`, `plain` и `json`.
+
+## Установка
+
+```bash
+git clone https://github.com/Ekaterina-Chmil/php-project-48.git
+cd php-project-48
+make install
+```
+
 ### Пример работы пакета с JSON
 [![asciicast](https://asciinema.org/a/AfwJIUHZqfiKabkb0pQ8BZHTg.svg)](https://asciinema.org/a/AfwJIUHZqfiKabkb0pQ8BZHTg)
 
@@ -65,6 +79,30 @@ php bin/gendiff tests/fixtures/file1.json tests/fixtures/file2.json
   - group2: {...}
   + group3: {...}
 }
+```
+### Пример работы пакета — Плоский формат (Plain)
+[![asciicast](https://asciinema.org/a/zygeE4MfPfQanFMHQLd4dKZ2z.svg)](https://asciinema.org/a/zygeE4MfPfQanFMHQLd4dKZ2z)
+
+Команда:
+
+```bash
+php bin/gendiff --format plain tests/fixtures/file1.json tests/fixtures/file2.json
+```
+
+Вывод:
+
+```text
+Property 'common.follow' was added with value: false
+Property 'common.setting2' was removed
+Property 'common.setting3' was updated. From true to null
+Property 'common.setting4' was added with value: 'blah blah'
+Property 'common.setting5' was added with value: [complex value]
+Property 'common.setting6.doge.wow' was updated. From '' to 'so much'
+Property 'common.setting6.ops' was added with value: 'vops'
+Property 'group1.baz' was updated. From 'bas' to 'bars'
+Property 'group1.nest' was updated. From [complex value] to 'str'
+Property 'group2' was removed
+Property 'group3' was added with value: [complex value]
 ```
 
 ### CI / Coverage

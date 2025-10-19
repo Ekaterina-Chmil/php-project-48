@@ -7,7 +7,7 @@ use Symfony\Component\Yaml\Yaml;
 
 use function Differ\Parsers\parse;
 use function Differ\buildDiff;
-use function Differ\Formatters\stylish;
+use function Differ\Formatters\format;
 
 function genDiff(string $filepath1, string $filepath2, string $format = 'stylish'): string
 {
@@ -29,11 +29,7 @@ function genDiff(string $filepath1, string $filepath2, string $format = 'stylish
 
     $diff = buildDiff($data1, $data2);
 
-    if ($format === 'stylish') {
-        return stylish($diff);
-    }
-
-    throw new \RuntimeException("Неизвестный формат вывода: $format");
+    return format($diff, $format);
 }
 
 function getFormat(string $filepath): string
