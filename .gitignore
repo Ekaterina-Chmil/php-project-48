@@ -1,1 +1,11 @@
 /vendor/
+.phpunit.result.cache
+.DS_Store
+.idea/
+.vscode/
+*.log
+*.tmp
+*.cache
+Thumbs.db
+demo.cast
+demo-yaml.cast
