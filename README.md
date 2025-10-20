@@ -104,6 +104,33 @@ Property 'group1.nest' was updated. From [complex value] to 'str'
 Property 'group2' was removed
 Property 'group3' was added with value: [complex value]
 ```
+### Пример работы пакета — JSON формат
+[![asciicast](https://asciinema.org/a/BPNATROcOrMqhXwgu8y621ltK.svg)](https://asciinema.org/a/BPNATROcOrMqhXwgu8y621ltK)
+
+Команда:
+
+```bash
+php bin/gendiff --format json tests/fixtures/file1.json tests/fixtures/file2.json
+```
+
+Вывод:
+
+```text
+[
+  {
+    "key": "common",
+    "status": "nested",
+    "children": [
+      {
+        "key": "follow",
+        "status": "added",
+        "value": false
+      },
+      ...
+    ]
+  }
+]
+```
 
 ### CI / Coverage
 [![PHP CI](https://github.com/Ekaterina-Chmil/php-project-48/actions/workflows/main.yml/badge.svg)](https://github.com/Ekaterina-Chmil/php-project-48/actions/workflows/main.yml)
