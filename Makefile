@@ -18,7 +18,7 @@ test:
 	composer exec --verbose phpunit tests
 
 test-coverage:
-	composer test:coverage
+	composer test-coverage
 
 test-coverage-text:
 	composer test:coverage-text
