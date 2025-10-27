@@ -10,6 +10,7 @@ if (file_exists($autoloadPath1)) {
     require_once $autoloadPath2;
 }
 
+use Docopt;
 use function Differ\genDiff;
 
 $doc = <<<DOC
@@ -34,4 +35,4 @@ $format = $args['--format'] ?? 'stylish';
 
 $diff = genDiff($firstFile, $secondFile, $format);
 
-print_r($diff);
+echo $diff;

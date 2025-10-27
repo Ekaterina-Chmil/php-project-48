@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Differ;
 
 function buildDiff(array $data1, array $data2): array

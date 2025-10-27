@@ -1,8 +1,10 @@
 <?php
 
-namespace Differ\Formatters;
+declare(strict_types=1);
 
-function stylish(array $diff): string
+namespace Differ\Formatters\Stylish;
+
+function format(array $data): string
 {
     $iter = function (array $data, int $depth = 1) use (&$iter): string {
         $indentSize = 4;
@@ -44,13 +46,15 @@ function stylish(array $diff): string
                     return "{$currentIndent}  {$key}: {\n" .
                         $iter($item['children'], $depth + 1) .
                         "\n" . $currentIndent . "  }";
+                default:
+                    throw new \Exception("Unknown status: {$status}");
             }
         }, $data);
 
         return implode("\n", $lines);
     };
 
-    return "{\n" . $iter($diff) . "\n}";
+    return "{\n" . $iter($data) . "\n}";
 }
 
 function formatPrimitive(mixed $value): string

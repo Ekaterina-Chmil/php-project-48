@@ -1,6 +1,8 @@
 <?php
 
-namespace Differ\Formatters;
+declare(strict_types=1);
+
+namespace Differ\Formatters\Plain;
 
 function formatValue(mixed $value): string
 {
@@ -19,7 +21,7 @@ function formatValue(mixed $value): string
     return (string)$value;
 }
 
-function plain(array $diff, string $parent = ''): string
+function format(array $data, string $parent = ''): string
 {
     $lines = array_map(function ($item) use ($parent) {
         $key = $parent === '' ? $item['key'] : $parent . '.' . $item['key'];
@@ -30,19 +32,18 @@ function plain(array $diff, string $parent = ''): string
                 return "Property '$key' was added with value: $value";
             case 'removed':
                 return "Property '$key' was removed";
-            case 'updated':
             case 'changed':
                 $old = formatValue($item['oldValue']);
                 $new = formatValue($item['newValue']);
                 return "Property '$key' was updated. From $old to $new";
             case 'nested':
-                return plain($item['children'], $key);
+                return format($item['children'], $key);
             case 'unchanged':
                 return null;
             default:
                 throw new \Exception("Unknown status: {$item['status']}");
         }
-    }, $diff);
+    }, $data);
 
     return implode("\n", array_filter($lines));
 }

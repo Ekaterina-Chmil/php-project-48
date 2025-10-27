@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Differ;
 
 use Funct\Collection;
@@ -7,7 +9,7 @@ use Symfony\Component\Yaml\Yaml;
 
 use function Differ\Parsers\parse;
 use function Differ\buildDiff;
-use function Differ\Formatters\format;
+use function Differ\format;
 
 function genDiff(string $filepath1, string $filepath2, string $format = 'stylish'): string
 {
@@ -29,7 +31,7 @@ function genDiff(string $filepath1, string $filepath2, string $format = 'stylish
 
     $diff = buildDiff($data1, $data2);
 
-    return format($diff, $format);
+    return format($format, $diff);
 }
 
 function getFormat(string $filepath): string

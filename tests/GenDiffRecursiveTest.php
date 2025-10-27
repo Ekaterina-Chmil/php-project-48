@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 use function Differ\genDiff;
 
-class GenDiffTest extends TestCase
+class GenDiffRecursiveTest extends TestCase
 {
     public function testNestedJsonFiles()
     {
@@ -27,7 +27,7 @@ class GenDiffTest extends TestCase
         }
         setting6: {
             doge: {
-              - wow:
+              - wow: 
               + wow: so much
             }
             key: value
@@ -63,4 +63,3 @@ EOT;
         $this->assertEquals($expected, genDiff($file1, $file2));
     }
 }
-

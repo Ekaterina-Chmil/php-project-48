@@ -1,8 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Differ\Formatters\Json;
 
-function json(array $diff): string
+use JsonException;
+
+/**
+ * @throws JsonException
+ */
+function format(array $data): string
 {
-    return json_encode($diff, JSON_PRETTY_PRINT);
+    return json_encode($data, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT) . PHP_EOL;
 }
