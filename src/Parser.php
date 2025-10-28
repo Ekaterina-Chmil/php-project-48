@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Differ\Parsers;
+namespace Differ\Parser;
 
 use Symfony\Component\Yaml\Yaml;
 use RuntimeException;

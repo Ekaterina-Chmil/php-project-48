@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Differ;
+namespace Differ\Formatter;
 
 use function Differ\Formatters\Stylish\format as stylishFormat;
 use function Differ\Formatters\Plain\format as plainFormat;

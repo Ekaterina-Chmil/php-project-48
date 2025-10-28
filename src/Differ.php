@@ -2,46 +2,57 @@
 
 declare(strict_types=1);
 
-namespace Differ;
+namespace Differ\Differ;
 
-use Funct\Collection;
-use Symfony\Component\Yaml\Yaml;
+use function Differ\DataGetter\getFileData;
+use function Differ\Parser\parse;
+use function Differ\Formatter\format;
 
-use function Differ\Parsers\parse;
-use function Differ\buildDiff;
-use function Differ\format;
+const UNCHANGED = 'unchanged';
+const ADDED = 'added';
+const REMOVED = 'removed';
+const NESTED = 'nested';
+const CHANGED = 'changed';
 
-function genDiff(string $filepath1, string $filepath2, string $format = 'stylish'): string
+function genDiff(string $filepath1, string $filepath2, string $formatName = 'stylish'): string
 {
-    $fullPath1 = realpath($filepath1);
-    $fullPath2 = realpath($filepath2);
+    $data1 = getFileData($filepath1);
+    $data2 = getFileData($filepath2);
 
-    if ($fullPath1 === false || $fullPath2 === false) {
-        throw new \Exception("Файл не найден!");
-    }
+    $parsed1 = parse($data1['dataFormat'], $data1['rawData']);
+    $parsed2 = parse($data2['dataFormat'], $data2['rawData']);
 
-    $fileContent1 = file_get_contents($filepath1);
-    $fileContent2 = file_get_contents($filepath2);
+    $diff = buildDiffData($parsed1, $parsed2);
 
-    $format1 = getFormat($fullPath1);
-    $format2 = getFormat($fullPath2);
-
-    $data1 = parse($format1, $fileContent1);
-    $data2 = parse($format2, $fileContent2);
-
-    $diff = buildDiff($data1, $data2);
-
-    return format($format, $diff);
+    return format($formatName, $diff);
 }
 
-function getFormat(string $filepath): string
+function buildDiffData(array $data1, array $data2): array
 {
-    $ext = pathinfo($filepath, PATHINFO_EXTENSION);
+    $keys = array_keys($data1 + $data2);
+    sort($keys);
 
-    return match (strtolower($ext)) {
-        'json' => 'json',
-        'yml' => 'yml',
-        'yaml' => 'yaml',
-        default => throw new \RuntimeException("Unknown file format: $ext"),
-    };
+    $result = [];
+    foreach ($keys as $key) {
+        $has1 = array_key_exists($key, $data1);
+        $has2 = array_key_exists($key, $data2);
+
+        $val1 = $has1 ? $data1[$key] : null;
+        $val2 = $has2 ? $data2[$key] : null;
+
+        if ($has1 && !$has2) {
+            $result[] = ['key' => $key, 'status' => REMOVED, 'value' => $val1];
+        } elseif (!$has1 && $has2) {
+            $result[] = ['key' => $key, 'status' => ADDED, 'value' => $val2];
+        } elseif (is_array($val1) && is_array($val2)) {
+            $children = buildDiffData($val1, $val2);
+            $result[] = ['key' => $key, 'status' => NESTED, 'children' => $children];
+        } elseif ($val1 !== $val2) {
+            $result[] = ['key' => $key, 'status' => CHANGED, 'oldValue' => $val1, 'newValue' => $val2];
+        } else {
+            $result[] = ['key' => $key, 'status' => UNCHANGED, 'value' => $val1];
+        }
+    }
+
+    return $result;
 }
