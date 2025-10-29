@@ -18,10 +18,11 @@ test:
 	composer exec --verbose phpunit tests
 
 test-coverage:
-	vendor/bin/phpunit --coverage-clover=coverage.xml tests
+	XDEBUG_MODE=coverage composer exec --verbose phpunit tests -- --coverage-clover=coverage.xml
 
 test-coverage-text:
 	composer test:coverage-text
 
 test-coverage-html:
 	composer test:coverage-html
+	
