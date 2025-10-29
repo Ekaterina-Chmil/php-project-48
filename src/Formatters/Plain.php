@@ -45,5 +45,5 @@ function format(array $data, string $parent = ''): string
         }
     }, $data);
 
-    return implode("\n", array_filter($lines, 'strlen'));
+    return implode("\n", array_filter($lines, fn($line) => $line));
 }
