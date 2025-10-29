@@ -18,7 +18,7 @@ test:
 	composer exec --verbose phpunit tests
 
 test-coverage:
-	composer test-coverage
+	vendor/bin/phpunit --coverage-clover=coverage.xml
 
 test-coverage-text:
 	composer test:coverage-text
