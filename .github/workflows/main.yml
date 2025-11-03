@@ -32,7 +32,7 @@ jobs:
         run: php -d error_reporting="E_ALL & ~E_DEPRECATED" vendor/bin/phpcs --standard=PSR12 src
 
       - name: Run Tests
-        run: vendor/bin/phpunit --colors=always
+        run: make test
 
       - name: Run Tests with Coverage
         run: make test-coverage
