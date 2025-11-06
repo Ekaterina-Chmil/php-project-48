@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1762422407">
-  <project timestamp="1762422407" name="Clover Coverage">
+<coverage generated="1762427891">
+  <project timestamp="1762427891" name="Clover Coverage">
     <file name="/Users/ekaterinachmil/projects/php-project-48/src/DataGetter.php">
       <line num="17" type="stmt" count="4"/>
       <line num="18" type="stmt" count="0"/>
