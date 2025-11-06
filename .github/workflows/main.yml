@@ -40,7 +40,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.projectKey=ekaterinachmil_php-project-48
-            -Dsonar.organization=ekaterinachmil
+            -Dsonar.projectKey=Ekaterina-Chmil_php-project-48
+            -Dsonar.organization=ekaterina-chmil
             -Dsonar.projectBaseDir=.
             -Dsonar.php.coverage.reportPaths=coverage.xml
