@@ -18,7 +18,8 @@ test:
 	composer exec --verbose phpunit tests
 
 test-coverage:
-	XDEBUG_MODE=coverage vendor/bin/phpunit --bootstrap vendor/autoload.php --coverage-clover=coverage.xml tests
+	XDEBUG_MODE=coverage vendor/bin/phpunit --bootstrap vendor/autoload.php --coverage-filter src --coverage-clover=coverage.xml tests
+	
 test-coverage-text:
-	XDEBUG_MODE=coverage composer exec --verbose phpunit tests -- --coverage-text
+	XDEBUG_MODE=coverage vendor/bin/phpunit --bootstrap vendor/autoload.php --coverage-text tests
 	
