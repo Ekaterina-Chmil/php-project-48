@@ -7,7 +7,6 @@ namespace Differ\Formatter;
 use const Differ\FORMAT_STYLISH;
 use const Differ\FORMAT_PLAIN;
 use const Differ\FORMAT_JSON;
-
 use function Differ\Formatters\Stylish\render as stylishFormat;
 use function Differ\Formatters\Plain\render as plainFormat;
 use function Differ\Formatters\Json\render as jsonFormat;
