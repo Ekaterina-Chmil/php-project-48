@@ -8,7 +8,6 @@ use const Differ\FORMAT_JSON;
 use const Differ\FORMAT_YML;
 use const Differ\FORMAT_YAML;
 use const Differ\SUPPORTED_FORMATS;
-
 use function Differ\Parsers\parse;
 use function Differ\Formatter\render;
 

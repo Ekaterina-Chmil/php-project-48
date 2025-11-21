@@ -77,7 +77,8 @@ function stringifyValue(array $value, int $depth): string
     $indentValue = str_repeat(INDENT_SYMBOL, $indentSize);
 
     $lines = array_map(function ($key, $val) use ($indentValue, $depth) {
-        $formattedValue = is_array($val) && !array_is_list($val) ? stringifyValue($val, $depth + 1) : formatValue($val, $depth);
+        $isComplexArray = is_array($val) && !array_is_list($val);
+        $formattedValue = $isComplexArray ? stringifyValue($val, $depth + 1) : formatValue($val, $depth);
         return "{$indentValue}{$key}: {$formattedValue}";
     }, array_keys($value), array_values($value));
 
