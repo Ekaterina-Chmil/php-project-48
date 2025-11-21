@@ -4,7 +4,7 @@ namespace Tests;
 
 use PHPUnit\Framework\TestCase;
 
-use function Differ\Formatters\Json\format;
+use function Differ\Formatters\Json\render;
 
 class JsonFormatterTest extends TestCase
 {
@@ -17,6 +17,6 @@ class JsonFormatterTest extends TestCase
 
         $expected = json_encode($diff, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT) . PHP_EOL;
 
-        $this->assertEquals($expected, format($diff));
+        $this->assertEquals($expected, render($diff));
     }
 }

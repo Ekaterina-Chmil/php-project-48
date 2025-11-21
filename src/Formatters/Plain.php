@@ -21,7 +21,7 @@ function formatValue(mixed $value): string
     return (string)$value;
 }
 
-function format(array $data, string $parent = ''): string
+function render(array $data, string $parent = ''): string
 {
     $lines = array_map(function ($item) use ($parent) {
         $key = $parent === '' ? $item['key'] : $parent . '.' . $item['key'];
@@ -30,16 +30,21 @@ function format(array $data, string $parent = ''): string
             case 'added':
                 $value = formatValue($item['value']);
                 return "Property '$key' was added with value: $value";
+
             case 'removed':
                 return "Property '$key' was removed";
+
             case 'changed':
                 $old = formatValue($item['oldValue']);
                 $new = formatValue($item['newValue']);
                 return "Property '$key' was updated. From $old to $new";
+
             case 'nested':
-                return format($item['children'], $key);
+                return render($item['children'], $key);
+
             case 'unchanged':
                 return null;
+
             default:
                 throw new \Exception("Unknown status: {$item['status']}");
         }

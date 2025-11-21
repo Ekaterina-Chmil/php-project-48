@@ -4,61 +4,64 @@ declare(strict_types=1);
 
 namespace Differ\Formatters\Stylish;
 
-function format(array $data): string
+use const Differ\Differ\ADDED;
+use const Differ\Differ\REMOVED;
+use const Differ\Differ\UNCHANGED;
+use const Differ\Differ\CHANGED;
+use const Differ\Differ\NESTED;
+
+const INDENT_SYMBOL = ' ';
+const INDENT_COUNT = 4;
+const COMPARE_SYMBOL_LENGTH = 2;
+const COMPARE_TEXT_SYMBOL_MAP = [
+    ADDED => '+',
+    REMOVED => '-',
+    UNCHANGED => ' ',
+    CHANGED => ' ',
+    NESTED => ' ',
+];
+
+function render(array $data): string
 {
-    $iter = function (array $data, int $depth = 1) use (&$iter): string {
-        $indentSize = 4;
-        $currentIndent = str_repeat(' ', $depth * $indentSize - 2);
-        $bracketIndent = str_repeat(' ', ($depth - 1) * $indentSize);
-
-        $stringify = function ($value, int $depth) use (&$stringify): string {
-            if (!is_array($value)) {
-                return formatPrimitive($value);
-            }
-
-            $indentSize = 4;
-            $currentIndent = str_repeat(' ', ($depth + 1) * $indentSize);
-            $bracketIndent = str_repeat(' ', $depth * $indentSize);
-
-            $lines = [];
-            foreach ($value as $k => $v) {
-                $lines[] = "{$currentIndent}{$k}: " . (is_array($v) ? $stringify($v, $depth + 1) : formatPrimitive($v));
-            }
-            return "{\n" . implode("\n", $lines) . "\n{$bracketIndent}}";
-        };
-
-        $lines = array_map(function ($item) use ($iter, $currentIndent, $depth, $stringify) {
-            $key = $item['key'];
-            $status = $item['status'];
-
-            switch ($status) {
-                case 'added':
-                    return "{$currentIndent}+ {$key}: " . $stringify($item['value'], $depth);
-                case 'removed':
-                    return "{$currentIndent}- {$key}: " . $stringify($item['value'], $depth);
-                case 'unchanged':
-                    return "{$currentIndent}  {$key}: " . $stringify($item['value'], $depth);
-                case 'changed':
-                    $old = "{$currentIndent}- {$key}: " . $stringify($item['oldValue'], $depth);
-                    $new = "{$currentIndent}+ {$key}: " . $stringify($item['newValue'], $depth);
-                    return $old . "\n" . $new;
-                case 'nested':
-                    return "{$currentIndent}  {$key}: {\n" .
-                        $iter($item['children'], $depth + 1) .
-                        "\n" . $currentIndent . "  }";
-                default:
-                    throw new \Exception("Unknown status: {$status}");
-            }
-        }, $data);
-
-        return implode("\n", $lines);
-    };
-
-    return "{\n" . $iter($data) . "\n}";
+    return stringify($data, 1);
 }
 
-function formatPrimitive(mixed $value): string
+function stringify(array $data, int $depth = 1): string
 {
+    $indentSize = $depth * INDENT_COUNT - COMPARE_SYMBOL_LENGTH;
+    $indentValue = str_repeat(INDENT_SYMBOL, $indentSize);
+
+    $lines = array_map(function ($item) use ($depth, $indentValue) {
+        $key = $item['key'];
+        $status = $item['status'];
+
+        switch ($status) {
+            case ADDED:
+                return "{$indentValue}+ {$key}: " . formatValue($item['value'], $depth + 1);
+            case REMOVED:
+                return "{$indentValue}- {$key}: " . formatValue($item['value'], $depth + 1);
+            case UNCHANGED:
+                return "{$indentValue}  {$key}: " . formatValue($item['value'], $depth + 1);
+            case CHANGED:
+                $old = "{$indentValue}- {$key}: " . formatValue($item['oldValue'], $depth + 1);
+                $new = "{$indentValue}+ {$key}: " . formatValue($item['newValue'], $depth + 1);
+                return $old . "\n" . $new;
+            case NESTED:
+                return "{$indentValue}  {$key}: " . stringify($item['children'], $depth + 1);
+            default:
+                throw new \Exception("Unknown status: {$status}");
+        }
+    }, $data);
+
+    $innerIndent = str_repeat(INDENT_SYMBOL, ($depth - 1) * INDENT_COUNT);
+    return "{\n" . implode("\n", $lines) . "\n{$innerIndent}}";
+}
+
+function formatValue(mixed $value, int $depth): string
+{
+    if (is_array($value) && !array_is_list($value)) {
+        return stringifyValue($value, $depth);
+    }
     if (is_bool($value)) {
         return $value ? 'true' : 'false';
     }
@@ -66,4 +69,18 @@ function formatPrimitive(mixed $value): string
         return 'null';
     }
     return (string) $value;
+}
+
+function stringifyValue(array $value, int $depth): string
+{
+    $indentSize = $depth * INDENT_COUNT;
+    $indentValue = str_repeat(INDENT_SYMBOL, $indentSize);
+
+    $lines = array_map(function ($key, $val) use ($indentValue, $depth) {
+        $formattedValue = is_array($val) && !array_is_list($val) ? stringifyValue($val, $depth + 1) : formatValue($val, $depth);
+        return "{$indentValue}{$key}: {$formattedValue}";
+    }, array_keys($value), array_values($value));
+
+    $innerIndent = str_repeat(INDENT_SYMBOL, ($depth - 1) * INDENT_COUNT);
+    return "{\n" . implode("\n", $lines) . "\n{$innerIndent}}";
 }

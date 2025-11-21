@@ -12,9 +12,7 @@ if (file_exists($autoloadPath1)) {
 
 use function Differ\Differ\genDiff;
 
-function getDoc(): string
-{
-    return <<<DOC
+$doc = <<<DOC
 Generate diff
 
 Usage:
@@ -27,15 +25,13 @@ Options:
   -v --version                  Show version
   --format <fmt>                Report format [default: stylish]
 DOC;
-}
 
-$doc = getDoc();
 $args = \Docopt::handle($doc, ['version' => '1.0.0']);
 
 $firstFile = $args['<firstFile>'];
 $secondFile = $args['<secondFile>'];
-$format = $args['--format'] ?? 'stylish';
+$format = $args['--format'];
 
 $diff = genDiff($firstFile, $secondFile, $format);
 
-echo $diff;
+print_r($diff);

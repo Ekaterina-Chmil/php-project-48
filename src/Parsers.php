@@ -2,21 +2,17 @@
 
 declare(strict_types=1);
 
-namespace Differ\Parser;
+namespace Differ\Parsers;
 
 use Symfony\Component\Yaml\Yaml;
 use RuntimeException;
 
-const FORMAT_JSON = 'json';
-const FORMAT_YML = 'yml';
-const FORMAT_YAML = 'yaml';
-
 function parse(string $dataFormat, string $data): array
 {
     return match ($dataFormat) {
-        FORMAT_JSON => jsonParse($data),
-        FORMAT_YML, FORMAT_YAML => yamlParse($data),
-        default => throw new RuntimeException(sprintf('Unknown format: %s!', $dataFormat)),
+        \Differ\FORMAT_JSON => jsonParse($data),
+        \Differ\FORMAT_YML, \Differ\FORMAT_YAML => yamlParse($data),
+        default => throw new \RuntimeException(sprintf('Unknown format: %s!', $dataFormat)),
     };
 }
 

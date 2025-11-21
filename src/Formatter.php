@@ -4,20 +4,20 @@ declare(strict_types=1);
 
 namespace Differ\Formatter;
 
-use function Differ\Formatters\Stylish\format as stylishFormat;
-use function Differ\Formatters\Plain\format as plainFormat;
-use function Differ\Formatters\Json\format as jsonFormat;
+use const Differ\FORMAT_STYLISH;
+use const Differ\FORMAT_PLAIN;
+use const Differ\FORMAT_JSON;
 
-const FORMAT_STYLISH = 'stylish';
-const FORMAT_PLAIN = 'plain';
-const FORMAT_JSON = 'json';
+use function Differ\Formatters\Stylish\render as stylishFormat;
+use function Differ\Formatters\Plain\render as plainFormat;
+use function Differ\Formatters\Json\render as jsonFormat;
 
-function format(string $formatName, array $data): string
+function render(string $renderType, array $data): string
 {
-    return match ($formatName) {
+    return match ($renderType) {
         FORMAT_STYLISH => stylishFormat($data),
         FORMAT_PLAIN   => plainFormat($data),
         FORMAT_JSON    => jsonFormat($data),
-        default        => throw new \Exception("Unknown format: {$formatName}"),
+        default        => throw new \Exception("Unknown format: {$renderType}"),
     };
 }
