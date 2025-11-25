@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace Differ\Differ;
 
+use function Differ\Parsers\parse;
+use function Differ\Formatter\render;
+
 use const Differ\FORMAT_JSON;
 use const Differ\FORMAT_YML;
 use const Differ\FORMAT_YAML;
 use const Differ\SUPPORTED_FORMATS;
-use function Differ\Parsers\parse;
-use function Differ\Formatter\render;
 
 const UNCHANGED = 'unchanged';
 const ADDED = 'added';
