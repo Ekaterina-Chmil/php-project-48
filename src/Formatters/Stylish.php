@@ -37,24 +37,35 @@ function stringify(array $data, int $depth = 1): string
 
         switch ($status) {
             case ADDED:
-                return "{$indentValue}+ {$key}: " . formatValue($item['value'], $depth + 1);
+                $value = formatValue($item['value'], $depth + 1);
+                return "{$indentValue}+ {$key}: {$value}";
+
             case REMOVED:
-                return "{$indentValue}- {$key}: " . formatValue($item['value'], $depth + 1);
+                $value = formatValue($item['value'], $depth + 1);
+                return "{$indentValue}- {$key}: {$value}";
+
             case UNCHANGED:
-                return "{$indentValue}  {$key}: " . formatValue($item['value'], $depth + 1);
+                $value = formatValue($item['value'], $depth + 1);
+                return "{$indentValue}  {$key}: {$value}";
+
             case CHANGED:
-                $old = "{$indentValue}- {$key}: " . formatValue($item['oldValue'], $depth + 1);
-                $new = "{$indentValue}+ {$key}: " . formatValue($item['newValue'], $depth + 1);
-                return $old . "\n" . $new;
+                $oldVal = formatValue($item['oldValue'], $depth + 1);
+                $newVal = formatValue($item['newValue'], $depth + 1);
+                $old = "{$indentValue}- {$key}: {$oldVal}";
+                $new = "{$indentValue}+ {$key}: {$newVal}";
+                return "{$old}\n{$new}";
+
             case NESTED:
-                return "{$indentValue}  {$key}: " . stringify($item['children'], $depth + 1);
+                $nestedStr = stringify($item['children'], $depth + 1);
+                return "{$indentValue}  {$key}: {$nestedStr}";
             default:
                 throw new \Exception("Unknown status: {$status}");
         }
     }, $data);
 
     $innerIndent = str_repeat(INDENT_SYMBOL, ($depth - 1) * INDENT_COUNT);
-    return "{\n" . implode("\n", $lines) . "\n{$innerIndent}}";
+    $joinedLines = implode("\n", $lines);
+    return "{\n{$joinedLines}\n{$innerIndent}}";
 }
 
 function formatValue(mixed $value, int $depth): string
@@ -83,5 +94,6 @@ function stringifyValue(array $value, int $depth): string
     }, array_keys($value), array_values($value));
 
     $innerIndent = str_repeat(INDENT_SYMBOL, ($depth - 1) * INDENT_COUNT);
-    return "{\n" . implode("\n", $lines) . "\n{$innerIndent}}";
+    $joinedLines = implode("\n", $lines);
+    return "{\n{$joinedLines}\n{$innerIndent}}";
 }

@@ -3,63 +3,33 @@
 namespace Tests;
 
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 use function Differ\Differ\genDiff;
 
 class GenDiffTest extends TestCase
 {
-    public function testFlatJsonFiles()
+    #[DataProvider('diffDataProvider')]
+    public function testGenDiff(string $file1, string $file2, string $format, string $expectedFile): void
     {
-        $file1 = __DIR__ . '/fixtures/file1.json';
-        $file2 = __DIR__ . '/fixtures/file2.json';
+        $result = genDiff($file1, $file2, $format);
+        $expected = file_get_contents($expectedFile);
+        $this->assertEquals(trim($expected), trim($result));
+    }
 
-        $expected = <<<EOT
-{
-    common: {
-      + follow: false
-        setting1: Value 1
-      - setting2: 200
-      - setting3: true
-      + setting3: null
-      + setting4: blah blah
-      + setting5: {
-            key5: value5
-        }
-        setting6: {
-            doge: {
-              - wow: 
-              + wow: so much
-            }
-            key: value
-          + ops: vops
-        }
-    }
-    group1: {
-      - baz: bas
-      + baz: bars
-        foo: bar
-      - nest: {
-            key: value
-        }
-      + nest: str
-    }
-  - group2: {
-        abc: 12345
-        deep: {
-            id: 45
-        }
-    }
-  + group3: {
-        deep: {
-            id: {
-                number: 45
-            }
-        }
-        fee: 100500
-    }
-}
-EOT;
+    public static function diffDataProvider(): array
+    {
+        $f = fn($name) => __DIR__ . '/fixtures/' . $name;
+        return [
+            [$f('flat1.json'), $f('flat2.json'), 'stylish', $f('expected_flat_stylish.txt')],
+            [$f('flat1.yml'),  $f('flat2.yml'),  'stylish', $f('expected_flat_stylish.txt')],
+            [$f('flat1.json'), $f('flat2.json'), 'plain',   $f('expected_flat_plain.txt')],
+            [$f('flat1.yml'),  $f('flat2.yml'),  'plain',   $f('expected_flat_plain.txt')],
 
-        $this->assertEquals($expected, genDiff($file1, $file2));
+            [$f('nested1.json'), $f('nested2.json'), 'stylish', $f('expected_nested_stylish.txt')],
+            [$f('nested1.yml'),  $f('nested2.yml'), 'stylish', $f('expected_nested_stylish.txt')],
+            [$f('nested1.json'), $f('nested2.json'), 'plain',   $f('expected_nested_plain.txt')],
+            [$f('nested1.yml'),  $f('nested2.yml'), 'plain',   $f('expected_nested_plain.txt')],
+        ];
     }
 }

@@ -8,9 +8,9 @@ use function Differ\Formatters\Stylish\render as stylishFormat;
 use function Differ\Formatters\Plain\render as plainFormat;
 use function Differ\Formatters\Json\render as jsonFormat;
 
-use const Differ\FORMAT_STYLISH;
-use const Differ\FORMAT_PLAIN;
-use const Differ\FORMAT_JSON;
+use const Differ\Parsers\FORMAT_STYLISH;
+use const Differ\Parsers\FORMAT_PLAIN;
+use const Differ\Parsers\FORMAT_JSON;
 
 function render(string $renderType, array $data): string
 {

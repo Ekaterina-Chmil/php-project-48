@@ -24,7 +24,7 @@ function formatValue(mixed $value): string
 function render(array $data, string $parent = ''): string
 {
     $lines = array_map(function ($item) use ($parent) {
-        $key = $parent === '' ? $item['key'] : $parent . '.' . $item['key'];
+        $key = $parent === '' ? $item['key'] : "{$parent}.{$item['key']}";
 
         switch ($item['status']) {
             case 'added':

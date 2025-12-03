@@ -22,4 +22,10 @@ test-coverage:
 	
 test-coverage-text:
 	XDEBUG_MODE=coverage vendor/bin/phpunit --bootstrap vendor/autoload.php --coverage-text tests
+
+style-check:
+	./vendor/bin/phpcs --standard=PSR12 src/ tests/
+
+style-fix:
+	./vendor/bin/phpcbf --standard=PSR12 src/ tests/
 	

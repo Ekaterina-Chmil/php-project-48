@@ -9,7 +9,6 @@
             "src/Differ.php",
             "src/Parsers.php",
             "src/Formatter.php",
-            "src/Formats.php",
             "src/Formatters/Stylish.php",
             "src/Formatters/Plain.php",
             "src/Formatters/Json.php"
@@ -29,7 +28,8 @@
     "require": {
         "docopt/docopt": "^1.0",
         "funct/funct": "^1.6",
-        "symfony/yaml": "^7.3"
+        "symfony/yaml": "^7.3",
+        "illuminate/collections": "^12.40"
     },
     "require-dev": {
         "phpunit/phpunit": "^12.3",

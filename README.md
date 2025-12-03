@@ -1,9 +1,7 @@
 ### Hexlet tests and linter status:
 
 [![Actions Status](https://github.com/Ekaterina-Chmil/php-project-48/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Ekaterina-Chmil/php-project-48/actions)
-
 [![PHP CI](https://github.com/Ekaterina-Chmil/php-project-48/actions/workflows/main.yml/badge.svg)](https://github.com/Ekaterina-Chmil/php-project-48/actions/workflows/main.yml)
-
 [![SonarCloud Status](https://sonarcloud.io/api/project_badges/measure?project=Ekaterina-Chmil_php-project-48&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Ekaterina-Chmil_php-project-48)
 
 ## Описание проекта
@@ -44,7 +42,7 @@ php bin/gendiff tests/fixtures/file1.json tests/fixtures/file2.json
 Команда:
 
 ```bash
-php bin/gendiff tests/fixtures/file1.yml tests/fixtures/file2.yml
+php bin/gendiff tests/fixtures/nested1.yml tests/fixtures/nested2.yml
 ```
 Вывод:
 
@@ -62,7 +60,7 @@ php bin/gendiff tests/fixtures/file1.yml tests/fixtures/file2.yml
 Команда:
 
 ```bash
-php bin/gendiff tests/fixtures/file1.json tests/fixtures/file2.json
+php bin/gendiff tests/fixtures/nested1.json tests/fixtures/nested2.json
 ```
 
 Сокращённый вывод:
@@ -91,7 +89,7 @@ php bin/gendiff tests/fixtures/file1.json tests/fixtures/file2.json
 Команда:
 
 ```bash
-php bin/gendiff --format plain tests/fixtures/file1.json tests/fixtures/file2.json
+php bin/gendiff --format plain tests/fixtures/nested1.json tests/fixtures/nested2.json
 ```
 
 Вывод:
@@ -115,7 +113,7 @@ Property 'group3' was added with value: [complex value]
 Команда:
 
 ```bash
-php bin/gendiff --format json tests/fixtures/file1.json tests/fixtures/file2.json
+php bin/gendiff --format json tests/fixtures/nested1.json tests/fixtures/nested2.json
 ```
 
 Вывод:

@@ -4,13 +4,10 @@ declare(strict_types=1);
 
 namespace Differ\Differ;
 
+use Illuminate\Support\Collection;
+
 use function Differ\Parsers\parse;
 use function Differ\Formatter\render;
-
-use const Differ\FORMAT_JSON;
-use const Differ\FORMAT_YML;
-use const Differ\FORMAT_YAML;
-use const Differ\SUPPORTED_FORMATS;
 
 const UNCHANGED = 'unchanged';
 const ADDED = 'added';
@@ -32,13 +29,7 @@ function getFileData(string $filePath): array
 
 function getFileFormat(string $filePath): string
 {
-    $fileExtension = pathinfo($filePath, PATHINFO_EXTENSION);
-
-    if (in_array($fileExtension, SUPPORTED_FORMATS, true)) {
-        return $fileExtension;
-    }
-
-    throw new \RuntimeException('Only Json and Yaml files are supported!');
+    return pathinfo($filePath, PATHINFO_EXTENSION);
 }
 
 function buildDiffItem(string $key, bool $has1, bool $has2, mixed $val1, mixed $val2): array
@@ -96,19 +87,15 @@ function genDiff(string $filepath1, string $filepath2, string $formatName = 'sty
 function buildDiffData(array $data1, array $data2): array
 {
     $keys = array_keys($data1 + $data2);
-    $sortedKeys = $keys;
-    sort($sortedKeys);
+    $sortedKeys = Collection::make($keys)->sort()->values()->all();
 
-    $result = [];
-    foreach ($sortedKeys as $key) {
+    return array_map(function ($key) use ($data1, $data2) {
         $has1 = array_key_exists($key, $data1);
         $has2 = array_key_exists($key, $data2);
 
         $val1 = $has1 ? $data1[$key] : null;
         $val2 = $has2 ? $data2[$key] : null;
 
-        $result[] = buildDiffItem($key, $has1, $has2, $val1, $val2);
-    }
-
-    return $result;
+        return buildDiffItem($key, $has1, $has2, $val1, $val2);
+    }, $sortedKeys);
 }
