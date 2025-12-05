@@ -15,21 +15,17 @@ const REMOVED = 'removed';
 const NESTED = 'nested';
 const CHANGED = 'changed';
 
-function getFileData(string $filePath): array
+function genDiff(string $filepath1, string $filepath2, string $formatName = 'stylish'): string
 {
-    if (!file_exists($filePath)) {
-        throw new \RuntimeException(sprintf('File on path "%s" not found!', $filePath));
-    }
+    $data1 = getFileData($filepath1);
+    $data2 = getFileData($filepath2);
 
-    return [
-        'dataFormat' => getFileFormat($filePath),
-        'rawData' => file_get_contents($filePath),
-    ];
-}
+    $parsed1 = parse($data1['dataFormat'], $data1['rawData']);
+    $parsed2 = parse($data2['dataFormat'], $data2['rawData']);
 
-function getFileFormat(string $filePath): string
-{
-    return pathinfo($filePath, PATHINFO_EXTENSION);
+    $diff = buildDiffData($parsed1, $parsed2);
+
+    return render($formatName, $diff);
 }
 
 function buildDiffItem(string $key, bool $has1, bool $has2, mixed $val1, mixed $val2): array
@@ -71,19 +67,6 @@ function buildDiffItem(string $key, bool $has1, bool $has2, mixed $val1, mixed $
     ];
 }
 
-function genDiff(string $filepath1, string $filepath2, string $formatName = 'stylish'): string
-{
-    $data1 = getFileData($filepath1);
-    $data2 = getFileData($filepath2);
-
-    $parsed1 = parse($data1['dataFormat'], $data1['rawData']);
-    $parsed2 = parse($data2['dataFormat'], $data2['rawData']);
-
-    $diff = buildDiffData($parsed1, $parsed2);
-
-    return render($formatName, $diff);
-}
-
 function buildDiffData(array $data1, array $data2): array
 {
     $keys = array_keys($data1 + $data2);
@@ -98,4 +81,21 @@ function buildDiffData(array $data1, array $data2): array
 
         return buildDiffItem($key, $has1, $has2, $val1, $val2);
     }, $sortedKeys);
+}
+
+function getFileData(string $filePath): array
+{
+    if (!file_exists($filePath)) {
+        throw new \RuntimeException(sprintf('File on path "%s" not found!', $filePath));
+    }
+
+    return [
+        'dataFormat' => getFileFormat($filePath),
+        'rawData' => file_get_contents($filePath),
+    ];
+}
+
+function getFileFormat(string $filePath): string
+{
+    return pathinfo($filePath, PATHINFO_EXTENSION);
 }

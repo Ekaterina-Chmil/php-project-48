@@ -13,13 +13,6 @@ use const Differ\Differ\NESTED;
 const INDENT_SYMBOL = ' ';
 const INDENT_COUNT = 4;
 const COMPARE_SYMBOL_LENGTH = 2;
-const COMPARE_TEXT_SYMBOL_MAP = [
-    ADDED => '+',
-    REMOVED => '-',
-    UNCHANGED => ' ',
-    CHANGED => ' ',
-    NESTED => ' ',
-];
 
 function render(array $data): string
 {
