@@ -13,8 +13,7 @@ class GenDiffTest extends TestCase
     public function testGenDiff(string $file1, string $file2, string $format, string $expectedFile): void
     {
         $result = genDiff($file1, $file2, $format);
-        $expected = file_get_contents($expectedFile);
-        $this->assertEquals(trim($expected), trim($result));
+        $this->assertStringEqualsFile($expectedFile, $result);
     }
 
     public static function diffDataProvider(): array
